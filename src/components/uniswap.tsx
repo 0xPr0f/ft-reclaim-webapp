@@ -10,11 +10,11 @@ const SwapWidget = dynamic(
     ssr: false,
   }
 )
-
+const TOKEN_LIST = 'https://ipfs.io/ipns/tokens.uniswap.org'
 const UniswapWidget = () => {
   return (
     <div className="Uniswap">
-      <SwapWidget />
+      <SwapWidget tokenList={TOKEN_LIST} />
     </div>
   )
 }
