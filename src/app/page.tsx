@@ -4,7 +4,7 @@ import { ConnectButton } from '@rainbow-me/rainbowkit'
 import { useAccount, useConnections } from 'wagmi'
 import Start_PROVIDER_TWITTER_PROFILE_ReclaimVerification from './reclaim_up'
 import React, { useEffect, useState } from 'react'
-import { Wallet, Plus, X, Twitter } from 'lucide-react'
+import { Wallet, Plus, X, Twitter, Loader2, CheckCheck } from 'lucide-react'
 import { CustomConnectButton } from '@/components/connectButton'
 import { startReclaimVerification } from './reclaim'
 
@@ -55,7 +55,8 @@ export default function TradingInterface() {
         setTwitterVerification({ loading: false, proof: proofs as any })
         setCreateKeyForm({
           ...createKeyForm,
-          twitterProfile: JSON.parse(proofs.claimData.context).screen_name,
+          twitterProfile: JSON.parse(proofs.claimData.context)
+            .extractedParameters.screen_name,
         })
         console.log('The proof recieved', proofs)
         console.log(
@@ -341,13 +342,30 @@ export default function TradingInterface() {
               </div>
 
               <div className="flex gap-3 pt-4">
-                <button
-                  onClick={handleTwitterUserProfileVerification}
-                  className="flex-1 py-3 cursor-pointer  bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center justify-center gap-2"
-                >
-                  <X size={28} />
-                  Verify Twitter
-                </button>
+                {twitterVerification.proof ? (
+                  <div className="flex-1 py-3 bg-green-600 text-white rounded-lg flex items-center justify-center gap-2">
+                    <CheckCheck />
+                    Verified
+                  </div>
+                ) : (
+                  <button
+                    onClick={handleTwitterUserProfileVerification}
+                    className="flex-1 py-3 cursor-pointer bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-60"
+                    disabled={twitterVerification.loading}
+                  >
+                    {twitterVerification.loading ? (
+                      <>
+                        <Loader2 className="animate-spin" />
+                        Verifying...
+                      </>
+                    ) : (
+                      <>
+                        <X size={28} />
+                        Verify Twitter
+                      </>
+                    )}
+                  </button>
+                )}
                 <button
                   onClick={handleCreateKey}
                   disabled={
