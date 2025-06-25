@@ -29,16 +29,14 @@ export default function TradingInterface() {
     name: '',
     symbol: '',
     tokenUri: '',
-    twitterProfile: 'Will be gotten from verification',
+    twitterProfile: 'will be gotten from verification',
   })
 
-  const [twitterVerification, setTwitterVerification] = useState<{
-    loading: boolean
-    proof: Proof | Proof[] | string | undefined
-  }>({
+  const [twitterVerification, setTwitterVerification] = useState({
     loading: false,
-    proof: undefined,
   })
+
+  const [twitterUserProof, setTwitterUserProof] = useState()
 
   const calculateBuyPrice = (amount: any) => {
     if (!amount || isNaN(amount)) return '0.000'
@@ -56,15 +54,20 @@ export default function TradingInterface() {
       onStartVerification: () =>
         setTwitterVerification({ ...twitterVerification, loading: true }),
       onSuccessVerification: (proofs: any) => {
-        setTwitterVerification({ loading: false, proof: proofs })
+        console.log('The proof recieved', proofs)
+
+        setTwitterVerification({
+          loading: false,
+        })
+        setTwitterUserProof(proofs)
         setCreateKeyForm({
           ...createKeyForm,
           twitterProfile: JSON.parse(proofs.claimData.context)
             .extractedParameters.screen_name,
         })
-        console.log('The proof recieved', proofs)
+
         console.log(
-          'The parsed proof recieved',
+          'The parsed proof context recieved',
           JSON.parse(proofs.claimData.context)
         )
       },
@@ -77,22 +80,23 @@ export default function TradingInterface() {
     })
   }
   useEffect(() => {
-    console.log(twitterVerification)
+    console.log('twitterVerification updated:', twitterVerification)
+    console.log(twitterUserProof)
   }, [twitterVerification])
+
   const createBuyOrder = () => {}
   const createSellOrder = () => {}
 
   const handleCreateKey = () => {
     console.log('Creating key with data:', createKeyForm)
-    setShowCreateKeyModal(false)
-    setCreateKeyForm({ name: '', symbol: '', tokenUri: '', twitterProfile: '' })
+    setCreateKeyForm({ ...createKeyForm, name: '', symbol: '', tokenUri: '' })
   }
 
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col">
-      <header className="border-b border-gray-800 p-4">
+    <div className="min-h-screen bg-white text-gray-800 flex flex-col">
+      <header className="border-b border-blue-100 p-4 bg-gradient-to-r from-blue-50 to-white shadow-sm">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+          <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
             Reclaim FT Hook
           </div>
 
@@ -100,9 +104,9 @@ export default function TradingInterface() {
             <button
               onClick={() => {
                 setShowCreateKeyModal(true)
-                setTwitterVerification({ loading: false, proof: undefined })
+                setTwitterVerification({ loading: false })
               }}
-              className="flex cursor-pointer items-center gap-2 px-6 py-2 bg-gradient-to-r from-gray-800 to-gray-700 hover:from-gray-700 hover:to-gray-600 rounded-lg border border-gray-600 transition-all duration-300 transform hover:scale-105 shadow-lg"
+              className="flex cursor-pointer items-center gap-2 px-6 py-2 bg-gradient-to-r from-blue-100 to-blue-50 hover:from-blue-200 hover:to-blue-100 text-blue-700 rounded-lg border border-blue-200 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
             >
               <Plus size={16} />
               Create Key
@@ -111,35 +115,35 @@ export default function TradingInterface() {
           </div>
         </div>
       </header>
-      <main className="flex-1 flex items-center justify-center p-4">
+      <main className="flex-1 flex items-center justify-center p-4 bg-gradient-to-br from-blue-50 to-white">
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent mb-2 animate-pulse">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 via-blue-500 to-blue-400 bg-clip-text text-transparent mb-2 animate-pulse">
               Trade Key
             </h1>
-            <div className="w-24 h-1 bg-gradient-to-r from-purple-500 to-blue-500 mx-auto rounded-full opacity-80"></div>
+            <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-blue-400 mx-auto rounded-full opacity-80"></div>
           </div>
 
-          <div className="flex mb-8 rounded-lg overflow-hidden shadow-lg">
+          <div className="flex mb-8 rounded-lg overflow-hidden shadow-lg border border-blue-100">
             <button
               onClick={() => setActiveTab('buy')}
               className={`flex-1 py-4 px-6 text-center cursor-pointer font-semibold transition-all duration-300 relative ${
                 activeTab === 'buy'
-                  ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg transform scale-105'
-                  : 'bg-gray-800 text-gray-400 hover:text-white hover:bg-gray-700'
+                  ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg transform scale-105'
+                  : 'bg-white text-blue-600 hover:text-blue-700 hover:bg-blue-50'
               }`}
             >
               <span className="relative z-10">Buy</span>
               {activeTab === 'buy' && (
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-blue-400 opacity-20 animate-pulse"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-500 opacity-20 animate-pulse"></div>
               )}
             </button>
             <button
               onClick={() => setActiveTab('sell')}
               className={`flex-1 py-4 px-6 text-center cursor-pointer font-semibold transition-all duration-300 relative ${
                 activeTab === 'sell'
-                  ? 'bg-gradient-to-r from-red-600 to-pink-600 text-white shadow-lg transform scale-105'
-                  : 'bg-gray-800 text-gray-400 hover:text-white hover:bg-gray-700'
+                  ? 'bg-gradient-to-r from-red-500 to-pink-500 text-white shadow-lg transform scale-105'
+                  : 'bg-white text-red-600 hover:text-red-700 hover:bg-red-50'
               }`}
             >
               <span className="relative z-10">Sell</span>
@@ -149,11 +153,11 @@ export default function TradingInterface() {
             </button>
           </div>
 
-          <div className="space-y-6 bg-gray-900 p-6 rounded-xl border border-gray-800 shadow-2xl">
+          <div className="space-y-6 bg-white p-6 rounded-xl border border-blue-100 shadow-2xl">
             {activeTab === 'buy' ? (
               <>
                 <div>
-                  <label className="block text-gray-300 text-sm font-medium mb-3">
+                  <label className="block text-gray-600 text-sm font-medium mb-3">
                     Key Token Address
                   </label>
                   <textarea
@@ -162,12 +166,12 @@ export default function TradingInterface() {
                       setBuyForm({ ...buyForm, tokenAddress: e.target.value })
                     }
                     placeholder="Please paste token address of key here"
-                    className="w-full bg-gray-800 border border-gray-600 rounded-lg p-4 text-white placeholder-gray-400 resize-none h-20 focus:border-purple-400 focus:ring-2 focus:ring-purple-400 focus:ring-opacity-20 focus:outline-none transition-all duration-300"
+                    className="w-full bg-blue-50 border border-blue-200 rounded-lg p-4 text-gray-800 placeholder-gray-500 resize-none h-20 focus:border-blue-400 focus:ring-2 focus:ring-blue-400 focus:ring-opacity-20 focus:outline-none transition-all duration-300"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-gray-300 text-sm font-medium mb-3">
+                  <label className="block text-gray-600 text-sm font-medium mb-3">
                     Amount
                   </label>
                   <input
@@ -177,12 +181,12 @@ export default function TradingInterface() {
                       setBuyForm({ ...buyForm, amount: e.target.value })
                     }
                     placeholder="Enter number of tokens to buy"
-                    className="w-full bg-gray-800 border border-gray-600 rounded-lg p-4 text-white placeholder-gray-400 focus:border-purple-400 focus:ring-2 focus:ring-purple-400 focus:ring-opacity-20 focus:outline-none transition-all duration-300"
+                    className="w-full bg-blue-50 border border-blue-200 rounded-lg p-4 text-gray-800 placeholder-gray-500 focus:border-blue-400 focus:ring-2 focus:ring-blue-400 focus:ring-opacity-20 focus:outline-none transition-all duration-300 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   />
                   {buyForm.amount && (
-                    <div className="mt-2 p-2 bg-gray-800 rounded border-l-4 border-purple-500">
-                      <p className="text-sm text-gray-300">
-                        <span className="text-purple-400 font-semibold">
+                    <div className="mt-2 p-2 bg-blue-50 rounded border-l-4 border-blue-500">
+                      <p className="text-sm text-gray-700">
+                        <span className="text-blue-600 font-semibold">
                           Price:
                         </span>{' '}
                         {calculateBuyPrice(buyForm.amount)} ETH
@@ -195,7 +199,7 @@ export default function TradingInterface() {
                   disabled={
                     !walletConnected || !buyForm.tokenAddress || !buyForm.amount
                   }
-                  className="w-full py-4 bg-gradient-to-r cursor-pointer from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 disabled:from-gray-700 disabled:to-gray-700 disabled:cursor-not-allowed text-white font-bold rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg disabled:hover:scale-100 disabled:hover:shadow-none"
+                  className="w-full py-4 bg-gradient-to-r cursor-pointer from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed text-white font-bold rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg disabled:hover:scale-100 disabled:hover:shadow-none"
                 >
                   {!walletConnected
                     ? 'Connect Wallet to Buy'
@@ -205,7 +209,7 @@ export default function TradingInterface() {
             ) : (
               <>
                 <div>
-                  <label className="block text-gray-300 text-sm font-medium mb-3">
+                  <label className="block text-gray-600 text-sm font-medium mb-3">
                     Key Token Address
                   </label>
                   <textarea
@@ -214,12 +218,12 @@ export default function TradingInterface() {
                       setSellForm({ ...sellForm, tokenAddress: e.target.value })
                     }
                     placeholder="Please paste token address of key here"
-                    className="w-full bg-gray-800 border border-gray-600 rounded-lg p-4 text-white placeholder-gray-400 resize-none h-20 focus:border-red-400 focus:ring-2 focus:ring-red-400 focus:ring-opacity-20 focus:outline-none transition-all duration-300"
+                    className="w-full bg-red-50 border border-red-200 rounded-lg p-4 text-gray-800 placeholder-gray-500 resize-none h-20 focus:border-red-400 focus:ring-2 focus:ring-red-400 focus:ring-opacity-20 focus:outline-none transition-all duration-300"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-gray-300 text-sm font-medium mb-3">
+                  <label className="block text-gray-600 text-sm font-medium mb-3">
                     Amount
                   </label>
                   <input
@@ -229,12 +233,12 @@ export default function TradingInterface() {
                       setSellForm({ ...sellForm, amount: e.target.value })
                     }
                     placeholder="Enter number of tokens to sell"
-                    className="w-full bg-gray-800 border border-gray-600 rounded-lg p-4 text-white placeholder-gray-400 focus:border-red-400 focus:ring-2 focus:ring-red-400 focus:ring-opacity-20 focus:outline-none transition-all duration-300"
+                    className="w-full bg-red-50 border border-red-200 rounded-lg p-4 text-gray-800 placeholder-gray-500 focus:border-red-400 focus:ring-2 focus:ring-red-400 focus:ring-opacity-20 focus:outline-none transition-all duration-300 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   />
                   {sellForm.amount && (
-                    <div className="mt-2 p-2 bg-gray-800 rounded border-l-4 border-red-500">
-                      <p className="text-sm text-gray-300">
-                        <span className="text-red-400 font-semibold">
+                    <div className="mt-2 p-2 bg-red-50 rounded border-l-4 border-red-500">
+                      <p className="text-sm text-gray-700">
+                        <span className="text-red-600 font-semibold">
                           Price:
                         </span>{' '}
                         {calculateSellPrice(sellForm.amount)} ETH
@@ -249,7 +253,7 @@ export default function TradingInterface() {
                     !sellForm.tokenAddress ||
                     !sellForm.amount
                   }
-                  className="w-full py-4 bg-gradient-to-r cursor-pointer from-red-600 to-pink-600 hover:from-red-500 hover:to-pink-500 disabled:from-gray-700 disabled:to-gray-700 disabled:cursor-not-allowed text-white font-bold rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg disabled:hover:scale-100 disabled:hover:shadow-none"
+                  className="w-full py-4 bg-gradient-to-r cursor-pointer from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed text-white font-bold rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg disabled:hover:scale-100 disabled:hover:shadow-none"
                 >
                   {!walletConnected
                     ? 'Connect Wallet to Sell'
@@ -261,20 +265,22 @@ export default function TradingInterface() {
         </div>
       </main>
 
-      <footer className="border-t border-gray-800 p-4">
+      <footer className="border-t border-blue-100 p-4 bg-gradient-to-r from-white to-blue-50">
         <div className="max-w-7xl mx-auto text-center text-gray-500 text-sm">
           <p>&copy; 2025 Reclaim FT Hook. Trade Keys of CT.</p>
         </div>
       </footer>
 
       {showCreateKeyModal && (
-        <div className="fixed inset-0 bg-black/10 flex items-center justify-center p-4 z-50">
-          <div className="bg-gray-900 rounded-lg p-6 w-full max-w-md border border-gray-700">
+        <div className="fixed inset-0 bg-black/20 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md border border-blue-200 shadow-2xl">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-semibold">Create Key</h2>
+              <h2 className="text-xl font-semibold text-gray-800">
+                Create Key
+              </h2>
               <button
                 onClick={() => setShowCreateKeyModal(false)}
-                className="text-gray-400 hover:text-white cursor-pointer transition-colors"
+                className="text-gray-400 hover:text-gray-600 cursor-pointer transition-colors"
               >
                 <X size={20} />
               </button>
@@ -282,7 +288,7 @@ export default function TradingInterface() {
 
             <div className="space-y-4">
               <div>
-                <label className="block text-gray-400 text-sm mb-2">Name</label>
+                <label className="block text-gray-600 text-sm mb-2">Name</label>
                 <input
                   type="text"
                   value={createKeyForm.name}
@@ -290,12 +296,12 @@ export default function TradingInterface() {
                     setCreateKeyForm({ ...createKeyForm, name: e.target.value })
                   }
                   placeholder="Enter token name"
-                  className="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-white placeholder-gray-500 focus:border-purple-500 focus:outline-none transition-colors"
+                  className="w-full bg-blue-50 border border-blue-200 rounded-lg p-3 text-gray-800 placeholder-gray-500 focus:border-blue-500 focus:outline-none transition-colors"
                 />
               </div>
 
               <div>
-                <label className="block text-gray-400 text-sm mb-2">
+                <label className="block text-gray-600 text-sm mb-2">
                   Symbol
                 </label>
                 <input
@@ -308,12 +314,12 @@ export default function TradingInterface() {
                     })
                   }
                   placeholder="Enter token symbol"
-                  className="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-white placeholder-gray-500 focus:border-purple-500 focus:outline-none transition-colors"
+                  className="w-full bg-blue-50 border border-blue-200 rounded-lg p-3 text-gray-800 placeholder-gray-500 focus:border-blue-500 focus:outline-none transition-colors"
                 />
               </div>
 
               <div>
-                <label className="block text-gray-400 text-sm mb-2">
+                <label className="block text-gray-600 text-sm mb-2">
                   Token URI/Image
                 </label>
                 <input
@@ -326,40 +332,34 @@ export default function TradingInterface() {
                     })
                   }
                   placeholder="Enter image URL or URI"
-                  className="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-white placeholder-gray-500 focus:border-purple-500 focus:outline-none transition-colors"
+                  className="w-full bg-blue-50 border border-blue-200 rounded-lg p-3 text-gray-800 placeholder-gray-500 focus:border-blue-500 focus:outline-none transition-colors"
                 />
               </div>
 
               <div>
-                <label className="block text-gray-400 text-sm mb-2">
+                <label className="block text-gray-600 text-sm mb-2">
                   Twitter Profile
                 </label>
                 <input
                   type="text"
                   value={createKeyForm.twitterProfile}
                   readOnly
-                  /*onChange={(e) =>
-                    setCreateKeyForm({
-                      ...createKeyForm,
-                      twitterProfile: e.target.value,
-                    })
-                  }*/
-
                   placeholder="Enter Twitter handle"
-                  className="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-white placeholder-gray-500 focus:border-purple-500 focus:outline-none transition-colors"
+                  className="w-full bg-gray-100 border border-gray-300 rounded-lg p-3 text-gray-800 placeholder-gray-500 focus:border-blue-500 focus:outline-none transition-colors"
                 />
               </div>
 
               <div className="flex gap-3 pt-4">
-                {twitterVerification.proof ? (
-                  <div className="flex-1 py-3 bg-green-600 text-white rounded-lg flex items-center justify-center gap-2">
+                {twitterUserProof &&
+                JSON.stringify(twitterUserProof).length > 20 ? (
+                  <div className="flex-1 py-3 bg-green-500 text-white rounded-lg flex items-center justify-center gap-2">
                     <CheckCheck />
                     Verified
                   </div>
                 ) : (
                   <button
                     onClick={handleTwitterUserProfileVerification}
-                    className="flex-1 py-3 cursor-pointer bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-60"
+                    className="flex-1 py-3 cursor-pointer bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-60"
                     disabled={twitterVerification.loading}
                   >
                     {twitterVerification.loading ? (
@@ -378,12 +378,12 @@ export default function TradingInterface() {
                 <button
                   onClick={handleCreateKey}
                   disabled={
-                    !createKeyForm.name &&
-                    !createKeyForm.symbol &&
-                    !createKeyForm.tokenUri &&
-                    !twitterVerification.proof
+                    !createKeyForm.name ||
+                    !createKeyForm.symbol ||
+                    !createKeyForm.tokenUri ||
+                    !twitterUserProof
                   }
-                  className="flex-1 py-3 cursor-pointer bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 disabled:from-gray-700 disabled:to-gray-700 disabled:cursor-not-allowed text-white rounded-lg transition-all duration-300"
+                  className="flex-1 py-3 cursor-pointer bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed text-white rounded-lg transition-all duration-300"
                 >
                   Create Key
                 </button>
