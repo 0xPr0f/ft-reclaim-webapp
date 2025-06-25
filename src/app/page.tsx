@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react'
 import { Wallet, Plus, X, Twitter, Loader2, CheckCheck } from 'lucide-react'
 import { CustomConnectButton } from '@/components/connectButton'
 import { startReclaimVerification } from './reclaim'
+import { Proof } from '@reclaimprotocol/js-sdk'
 
 export default function TradingInterface() {
   const [activeTab, setActiveTab] = useState('buy')
@@ -31,9 +32,12 @@ export default function TradingInterface() {
     twitterProfile: 'Will be gotten from verification',
   })
 
-  const [twitterVerification, setTwitterVerification] = useState({
+  const [twitterVerification, setTwitterVerification] = useState<{
+    loading: boolean
+    proof: Proof | Proof[] | string | undefined
+  }>({
     loading: false,
-    proof: null,
+    proof: undefined,
   })
 
   const calculateBuyPrice = (amount: any) => {
@@ -52,7 +56,7 @@ export default function TradingInterface() {
       onStartVerification: () =>
         setTwitterVerification({ ...twitterVerification, loading: true }),
       onSuccessVerification: (proofs: any) => {
-        setTwitterVerification({ loading: false, proof: proofs as any })
+        setTwitterVerification({ loading: false, proof: proofs })
         setCreateKeyForm({
           ...createKeyForm,
           twitterProfile: JSON.parse(proofs.claimData.context)
@@ -72,7 +76,9 @@ export default function TradingInterface() {
         setTwitterVerification({ ...twitterVerification, loading: false }),
     })
   }
-
+  useEffect(() => {
+    console.log(twitterVerification)
+  }, [twitterVerification])
   const createBuyOrder = () => {}
   const createSellOrder = () => {}
 
@@ -92,7 +98,10 @@ export default function TradingInterface() {
 
           <div className="flex items-center gap-3">
             <button
-              onClick={() => setShowCreateKeyModal(true)}
+              onClick={() => {
+                setShowCreateKeyModal(true)
+                setTwitterVerification({ loading: false, proof: undefined })
+              }}
               className="flex cursor-pointer items-center gap-2 px-6 py-2 bg-gradient-to-r from-gray-800 to-gray-700 hover:from-gray-700 hover:to-gray-600 rounded-lg border border-gray-600 transition-all duration-300 transform hover:scale-105 shadow-lg"
             >
               <Plus size={16} />
@@ -102,7 +111,6 @@ export default function TradingInterface() {
           </div>
         </div>
       </header>
-      <Start_PROVIDER_TWITTER_PROFILE_ReclaimVerification />
       <main className="flex-1 flex items-center justify-center p-4">
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
@@ -329,6 +337,7 @@ export default function TradingInterface() {
                 <input
                   type="text"
                   value={createKeyForm.twitterProfile}
+                  readOnly
                   /*onChange={(e) =>
                     setCreateKeyForm({
                       ...createKeyForm,
@@ -371,6 +380,7 @@ export default function TradingInterface() {
                   disabled={
                     !createKeyForm.name &&
                     !createKeyForm.symbol &&
+                    !createKeyForm.tokenUri &&
                     !twitterVerification.proof
                   }
                   className="flex-1 py-3 cursor-pointer bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 disabled:from-gray-700 disabled:to-gray-700 disabled:cursor-not-allowed text-white rounded-lg transition-all duration-300"
