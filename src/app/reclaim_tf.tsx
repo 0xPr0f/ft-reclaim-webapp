@@ -15,7 +15,7 @@ function Start_PROVIDER_TWITTER_FOLLOW_ReclaimVerification() {
       // Step 1: Fetch the configuration from your backend
       const response = await fetch('api/generate-config/twitter-count')
       const { reclaimProofRequestConfig } = await response.json()
-
+      console.log('reclaimProofRequestConfig', reclaimProofRequestConfig)
       // Step 2: Initialize the ReclaimProofRequest with the received configuration
       const reclaimProofRequest = await ReclaimProofRequest.fromJsonString(
         reclaimProofRequestConfig
@@ -30,7 +30,6 @@ function Start_PROVIDER_TWITTER_FOLLOW_ReclaimVerification() {
 
       // Step 4: Start listening for proof submissions
       await reclaimProofRequest.startSession({
-        // @typescript-eslint/no-explicit-any : false
         onSuccess: (proofs: any) => {
           console.log('Successfully created proof', proofs)
           setProofs(proofs)

@@ -5,11 +5,6 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  // Only handle POST requests
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' })
-  }
-
   try {
     // Decode the URL-encoded proof object from the request body
     const decodedBody = decodeURIComponent(req.body)
@@ -23,7 +18,9 @@ export default async function handler(
 
     console.log('Received proofs:', proof)
     // Process the proofs here (e.g., save to database, integrate with Solana, etc.)
-    return res.status(200).json({ message: 'Proof verified successfully' })
+    return res
+      .status(200)
+      .json({ message: 'Proof verified successfully', proof })
   } catch (error) {
     console.error('Error verifying proof:', error)
     return res.status(500).json({ error: 'Failed to verify proof' })

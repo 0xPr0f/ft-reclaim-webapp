@@ -13,8 +13,9 @@ function Start_PROVIDER_TWITTER_PROFILE_ReclaimVerification() {
       setIsLoading(true)
 
       // Step 1: Fetch the configuration from your backend
-      const response = await fetch('api/generate-config/twitter-count')
+      const response = await fetch('api/generate-config/twitter-user-profile')
       const { reclaimProofRequestConfig } = await response.json()
+      console.log('reclaimProofRequestConfig', reclaimProofRequestConfig)
 
       // Step 2: Initialize the ReclaimProofRequest with the received configuration
       const reclaimProofRequest = await ReclaimProofRequest.fromJsonString(

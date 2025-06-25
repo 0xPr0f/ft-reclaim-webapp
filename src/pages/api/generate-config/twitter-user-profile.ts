@@ -28,9 +28,9 @@ export default async function handler(
     const BASE_URL = `${protocol}://${host}`
 
     // Set the callback URL for receiving proofs
-    reclaimProofRequest.setAppCallbackUrl(
+    /*  reclaimProofRequest.setAppCallbackUrl(
       `${BASE_URL}/api/proof-reciever/twitter-user-profile`
-    )
+    )*/
 
     // Get the request configuration as JSON string
     const reclaimProofRequestConfig = reclaimProofRequest.toJsonString()

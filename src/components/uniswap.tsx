@@ -11,10 +11,13 @@ const SwapWidget = dynamic(
   }
 )
 const TOKEN_LIST = 'https://ipfs.io/ipns/tokens.uniswap.org'
-const UniswapWidget = () => {
+
+type UniswapWidgetProps = React.ComponentProps<typeof SwapWidget>
+
+const UniswapWidget = (props: UniswapWidgetProps) => {
   return (
     <div className="Uniswap">
-      <SwapWidget tokenList={TOKEN_LIST} />
+      <SwapWidget {...props} tokenList={TOKEN_LIST} />
     </div>
   )
 }
