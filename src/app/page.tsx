@@ -94,24 +94,26 @@ export default function TradingInterface() {
 
   return (
     <div className="min-h-screen bg-white text-gray-800 flex flex-col">
-      <header className="border-b border-blue-100 p-4 bg-gradient-to-r from-blue-50 to-white shadow-sm">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
+      <header className="border-b border-blue-100 p-3 sm:p-4 bg-gradient-to-r from-blue-50 to-white shadow-sm">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-0">
+          <div className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent text-center sm:text-left">
             Reclaim FT Hook
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto justify-center sm:justify-end">
             <button
               onClick={() => {
                 setShowCreateKeyModal(true)
                 setTwitterVerification({ loading: false })
               }}
-              className="flex cursor-pointer items-center gap-2 px-6 py-2 bg-gradient-to-r from-blue-100 to-blue-50 hover:from-blue-200 hover:to-blue-100 text-blue-700 rounded-lg border border-blue-200 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+              className="flex cursor-pointer items-center gap-1 sm:gap-2 px-3 sm:px-6 py-2 bg-gradient-to-r from-blue-100 to-blue-50 hover:from-blue-200 hover:to-blue-100 text-blue-700 rounded-lg border border-blue-200 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl text-sm sm:text-base"
             >
-              <Plus size={16} />
-              Create Key
+              <Plus size={14} className="sm:w-4 sm:h-4" />
+              <span className="">Create Key</span>
             </button>
-            <CustomConnectButton />
+            <div className="flex-shrink-0">
+              <CustomConnectButton />
+            </div>
           </div>
         </div>
       </header>
@@ -276,7 +278,7 @@ export default function TradingInterface() {
           <div className="bg-white rounded-lg p-6 w-full max-w-md border border-blue-200 shadow-2xl">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-semibold text-gray-800">
-                Create Key
+                Create New Key
               </h2>
               <button
                 onClick={() => setShowCreateKeyModal(false)}
@@ -369,7 +371,7 @@ export default function TradingInterface() {
                       </>
                     ) : (
                       <>
-                        <X size={28} />
+                        <X size={26} />
                         Verify Twitter
                       </>
                     )}
