@@ -79,12 +79,33 @@ export default function TradingInterface() {
         setTwitterVerification({ ...twitterVerification, loading: false }),
     })
   }
+
+  const handleTwitterFollowerVerification = () => {
+    startReclaimVerification({
+      fetchUrl: 'api/generate-config/twitter-count',
+      onStartVerification: () => {},
+      onSuccessVerification: (proofs: any) => {
+        console.log('The proof recieved', proofs)
+        console.log(
+          'The parsed proof context recieved',
+          JSON.parse(proofs.claimData.context)
+        )
+      },
+      onErrorVerification: (error) => {
+        console.error('The error recieved', error)
+      },
+      onEndVerification: () => {},
+    })
+  }
+
   useEffect(() => {
     console.log('twitterVerification updated:', twitterVerification)
-    console.log(twitterUserProof)
+    console.log('twitterUserProof', twitterUserProof)
   }, [twitterVerification])
 
-  const createBuyOrder = () => {}
+  const createBuyOrder = () => {
+    handleTwitterFollowerVerification()
+  }
   const createSellOrder = () => {}
 
   const handleCreateKey = () => {
@@ -201,6 +222,7 @@ export default function TradingInterface() {
                   disabled={
                     !walletConnected || !buyForm.tokenAddress || !buyForm.amount
                   }
+                  onClick={createBuyOrder}
                   className="w-full py-4 bg-gradient-to-r cursor-pointer from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed text-white font-bold rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg disabled:hover:scale-100 disabled:hover:shadow-none"
                 >
                   {!walletConnected

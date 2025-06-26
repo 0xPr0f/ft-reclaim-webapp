@@ -29,15 +29,6 @@ export default async function handler(
 
     console.log(BASE_URL)
 
-    reclaimProofRequest.setParams({
-      profile: 'CranQnow',
-      URL_PARAMS_2: 'DeFiGuyLuke',
-    })
-    // Set the callback URL for receiving proofs
-    reclaimProofRequest.setAppCallbackUrl(
-      `${BASE_URL}/api/proof-reciever/twitter-count`
-    )
-
     // Get the request configuration as JSON string
     const reclaimProofRequestConfig = reclaimProofRequest.toJsonString()
 
