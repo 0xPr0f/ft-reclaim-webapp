@@ -220,7 +220,8 @@ export default function TradingInterface() {
 
                 <button
                   disabled={
-                    !walletConnected || !buyForm.tokenAddress || !buyForm.amount
+                    //  !walletConnected ||
+                    !buyForm.tokenAddress || !buyForm.amount
                   }
                   onClick={createBuyOrder}
                   className="w-full py-4 bg-gradient-to-r cursor-pointer from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed text-white font-bold rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg disabled:hover:scale-100 disabled:hover:shadow-none"
@@ -273,9 +274,8 @@ export default function TradingInterface() {
 
                 <button
                   disabled={
-                    !walletConnected ||
-                    !sellForm.tokenAddress ||
-                    !sellForm.amount
+                    //  !walletConnected ||
+                    !sellForm.tokenAddress || !sellForm.amount
                   }
                   className="w-full py-4 bg-gradient-to-r cursor-pointer from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed text-white font-bold rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg disabled:hover:scale-100 disabled:hover:shadow-none"
                 >
